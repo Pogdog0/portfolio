@@ -80,26 +80,26 @@ button { color: inherit; }
 
 .hero-media { position: relative; z-index: 2; width: min(41vw, 650px); justify-self: end; transform: translateY(3vh); animation: media-in 1.2s .32s both; }
 .media-frame { position: relative; aspect-ratio: .82; overflow: hidden; border: 1px solid var(--line-strong); background: #1a2725; box-shadow: 0 40px 100px rgba(0,0,0,.35); }
-.media-image, .featured-media-bg { position: absolute; inset: 0; background: url("/images/profile/pogdog.png") center / cover; filter: saturate(.82) contrast(1.04); transform: scale(1.03); animation: slow-pan 16s ease-in-out infinite alternate; }
-.media-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(11,27,26,.15), rgba(8,10,10,.3) 40%, rgba(8,10,10,.92)), linear-gradient(0deg, rgba(233,91,66,.08), transparent 50%); }
-.media-scan { position: absolute; inset: 20% 0 auto; height: 1px; background: var(--signal); opacity: .4; box-shadow: 0 0 30px 5px rgba(233,91,66,.25); animation: scan 6s ease-in-out infinite; }
-.media-coordinates, .media-time, .featured-tag, .featured-foot { position: absolute; font: 9px var(--mono); letter-spacing: .11em; text-transform: uppercase; color: rgba(231,235,227,.7); }
-.media-coordinates { top: 23px; left: 23px; line-height: 1.7; }
-.media-time { top: 23px; right: 23px; }
-.media-time i { color: var(--signal); font-style: normal; margin: 0 5px; }
-.media-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 14px; }
-.play-ring { width: 74px; height: 74px; margin: auto; display: grid; place-items: center; border: 1px solid rgba(231,235,227,.55); border-radius: 50%; padding-left: 4px; font-size: 17px; transition: transform .4s ease, background .4s ease; }
-.media-frame:hover .play-ring { transform: scale(1.12); background: var(--signal); color: #160d0b; border-color: var(--signal); }
-.media-center small { color: rgba(231,235,227,.85); font: 9px var(--mono); letter-spacing: .16em; }
-.media-caption { position: absolute; bottom: 22px; left: 23px; right: 23px; display: flex; justify-content: space-between; align-items: end; font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-.media-caption span:first-child { font: 23px var(--sans); letter-spacing: -.05em; text-transform: none; }
-.media-caption span:last-child { color: var(--muted); }
+.media-image, .featured-media-bg { position: absolute; inset: 0; filter: saturate(.82) contrast(1.04); transform: scale(1.03); animation: slow-pan 16s ease-in-out infinite alternate; }
+.media-image { background: url("/images/projects/hero-systems.webp") center 48% / cover; }
+.featured-media-bg { background: url("/images/profile/pogdog.png") center / cover; }
+.media-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,10,10,.62), rgba(8,10,10,.08) 34%, rgba(8,10,10,.12) 58%, rgba(8,10,10,.94)), linear-gradient(0deg, rgba(233,91,66,.1), transparent 55%); }
+.media-coordinates, .media-status, .featured-tag, .featured-foot { position: absolute; font: 9px var(--mono); letter-spacing: .11em; text-transform: uppercase; color: rgba(231,235,227,.82); }
+.media-topline { position: absolute; z-index: 2; top: 23px; left: 23px; right: 23px; display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+.media-coordinates { position: static; line-height: 1.7; }
+.media-status { position: static; display: inline-flex; align-items: center; gap: 8px; padding: 9px 10px; border: 1px solid rgba(231,235,227,.2); background: rgba(8,10,10,.42); backdrop-filter: blur(10px); white-space: nowrap; }
+.media-status i { width: 6px; height: 6px; border-radius: 50%; background: #58e0a4; box-shadow: 0 0 12px rgba(88,224,164,.6); }
+.media-caption { position: absolute; z-index: 2; bottom: 22px; left: 23px; right: 23px; display: flex; justify-content: space-between; align-items: end; gap: 14px; }
+.media-profile { display: flex; align-items: center; gap: 13px; min-width: 0; }
+.media-profile img { width: 56px; height: 56px; flex: none; border: 1px solid rgba(231,235,227,.45); border-radius: 50%; background: #fbf8dd; object-fit: cover; }
+.media-profile > div { display: grid; gap: 6px; min-width: 0; }
+.media-profile strong { color: var(--paper); font: 23px var(--sans); letter-spacing: -.05em; }
+.media-profile small { color: rgba(231,235,227,.7); font: 9px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.media-focus { max-width: 145px; color: var(--muted); font: 9px/1.7 var(--mono); letter-spacing: .08em; text-align: right; text-transform: uppercase; }
 .hero-float { position: absolute; z-index: 3; display: flex; gap: 12px; align-items: start; min-width: 152px; padding: 13px 16px; background: rgba(17,21,19,.8); border: 1px solid var(--line); backdrop-filter: blur(14px); font: 9px/1.45 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .hero-float b { color: var(--paper); font-weight: 400; }
 .hero-float-top { top: 14%; right: -6%; animation: float 5s ease-in-out infinite; }
-.hero-float-bottom { bottom: 14%; left: -8%; align-items: center; animation: float 6s 1s ease-in-out infinite reverse; }
-.float-symbol, .float-number { color: var(--signal); font-size: 22px; line-height: 1; }
-.float-number { font-size: 16px; }
+.float-symbol { color: var(--signal); font-size: 22px; line-height: 1; }
 .hero-bottom-mark { position: absolute; bottom: 4vh; left: 50%; display: flex; gap: 12px; align-items: center; color: #727970; font: 9px var(--mono); letter-spacing: .17em; transform: translateX(-50%); }
 .scroll-arrow { color: var(--signal); font-size: 18px; animation: bob 1.5s ease-in-out infinite; }
 
@@ -303,7 +303,6 @@ button { color: inherit; }
 @keyframes lift-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes media-in { from { opacity: 0; transform: translateY(30px) scale(.97); } to { opacity: 1; transform: translateY(3vh) scale(1); } }
 @keyframes slow-pan { from { transform: scale(1.03) translate(-1%, -1%); } to { transform: scale(1.09) translate(1%, 1%); } }
-@keyframes scan { 0%, 100% { top: 19%; opacity: 0; } 15% { opacity: .5; } 70% { opacity: .35; } 85% { top: 83%; opacity: 0; } }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
 @keyframes breathe { 0%, 100% { box-shadow: 0 0 0 0 rgba(233,91,66,0); } 50% { box-shadow: 0 0 0 12px rgba(233,91,66,.06); } }
@@ -342,8 +341,16 @@ button { color: inherit; }
   .proof-items { gap: 5px; }
   .hero-media { width: 100%; margin-top: 58px; transform: none; animation-name: lift-in; }
   .hero-float-top { right: -3%; top: 12%; }
-  .hero-float-bottom { left: -3%; bottom: 10%; }
   .media-frame { aspect-ratio: .9; }
+  .media-topline { top: 17px; left: 17px; right: 17px; gap: 8px; }
+  .media-coordinates, .media-status { font-size: 8px; }
+  .media-status { gap: 6px; padding: 7px 8px; }
+  .media-caption { bottom: 18px; left: 17px; right: 17px; gap: 9px; }
+  .media-profile { gap: 10px; }
+  .media-profile img { width: 44px; height: 44px; }
+  .media-profile strong { font-size: 19px; }
+  .media-profile small, .media-focus { font-size: 8px; }
+  .media-focus { max-width: 95px; }
   .hero-bottom-mark { position: relative; bottom: auto; left: auto; margin: 50px auto 0; transform: none; }
   .metrics-section { grid-template-columns: 1fr 1fr; padding: 0 8vw; }
   .skill-board { grid-template-columns: 1fr 1fr; padding: 18px 8vw 0; }
