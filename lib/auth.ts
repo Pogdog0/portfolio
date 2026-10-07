@@ -17,7 +17,7 @@ function fromBase64Url(value: string) {
 
 async function importHmacKey() {
   const secret = process.env.AUTH_SECRET;
-  if (!secret) throw new Error("AUTH_SECRET is not configured");
+  if (!secret || secret.length < 32) throw new Error("AUTH_SECRET must contain at least 32 characters");
   return crypto.subtle.importKey("raw", encoder.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign", "verify"]);
 }
 
@@ -27,7 +27,8 @@ async function signPayload(payload: string) {
 }
 
 export async function verifyPassword(password: string, storedHash: string) {
-  const [algorithm, iterationText, saltText, hashText] = storedHash.split("$");
+  const separator = storedHash.includes(":") ? ":" : "$";
+  const [algorithm, iterationText, saltText, hashText] = storedHash.split(separator);
   if (algorithm !== "pbkdf2" || !iterationText || !saltText || !hashText) return false;
   const iterations = Number(iterationText);
   if (!Number.isInteger(iterations) || iterations < 100_000) return false;

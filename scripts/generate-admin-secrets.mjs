@@ -12,6 +12,6 @@ const salt = randomBytes(16);
 const hash = pbkdf2Sync(password, salt, iterations, 32, "sha256");
 const base64url = (value) => value.toString("base64url");
 
-console.log(`ADMIN_PASSWORD_HASH="pbkdf2$${iterations}$${base64url(salt)}$${base64url(hash)}"`);
+console.log(`ADMIN_PASSWORD_HASH="pbkdf2:${iterations}:${base64url(salt)}:${base64url(hash)}"`);
 console.log(`AUTH_SECRET="${base64url(randomBytes(48))}"`);
 console.log("\nStore these only in .env.local and your hosting provider's secret manager.");

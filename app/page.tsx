@@ -1,5 +1,9 @@
 import Portfolio from "@/components/Portfolio";
+import { getSiteContent } from "@/lib/content-store";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
-  return <Portfolio />;
+  const content = getSiteContent();
+  return <Portfolio content={{ ...content, projects: content.projects.filter((project) => project.status === "Published"), media: [] }} />;
 }

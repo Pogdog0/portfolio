@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
+import { getSiteContent } from "@/lib/content-store";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Pogdog — Roblox Gameplay Systems Engineer",
-  description: "Production debugging, gameplay systems, optimization, vehicles, and live-game maintenance.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
-  alternates: { canonical: "/" },
-  openGraph: {
-    title: "Pogdog — Roblox Gameplay Systems Engineer",
-    description: "I debug live games, understand messy codebases, and ship reliable fixes without rewriting what already works.",
-    type: "website",
-    url: "/",
-  },
-  twitter: {
-    card: "summary",
-    title: "Pogdog — Roblox Gameplay Systems Engineer",
-    description: "I debug live games, understand messy codebases, and ship reliable fixes without rewriting what already works.",
-  },
-  icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
-};
+export function generateMetadata(): Metadata {
+  const { settings } = getSiteContent();
+  return {
+    title: settings.seoTitle,
+    description: settings.seoDescription,
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+    alternates: { canonical: "/" },
+    openGraph: { title: settings.seoTitle, description: settings.seoDescription, type: "website", url: "/" },
+    twitter: { card: "summary", title: settings.seoTitle, description: settings.seoDescription },
+    icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
+  };
+}
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const structuredData = {

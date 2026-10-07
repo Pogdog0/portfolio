@@ -19,7 +19,7 @@ Useful routes:
 - `/` — portfolio
 - `/work/featured-project` — case study
 - `/admin/login` — admin sign-in
-- `/admin` — protected admin preview
+- `/admin` — protected content dashboard
 
 ## Configure local admin access
 
@@ -35,6 +35,7 @@ Put the generated values in `.env.local` with an admin email:
 ADMIN_EMAIL="you@example.com"
 ADMIN_PASSWORD_HASH="generated-hash"
 AUTH_SECRET="generated-secret"
+DATABASE_URL="file:./portfolio.db"
 NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 ```
 
@@ -42,11 +43,13 @@ Keep real values out of Git. `.env.local` is ignored; `.env.example` contains pl
 
 ## Project content
 
-Edit the portfolio copy, projects, images, and links in `components/Portfolio.tsx`. The case study is in `app/work/[slug]/page.tsx`; site metadata is in `app/layout.tsx`.
+Use `/admin` for projects, case studies, images, metrics, services, skills, working principles, contact details, announcements, and SEO settings. Static presentation copy and layout remain in `components/Portfolio.tsx` and `app/work/[slug]/page.tsx`.
 
 The current project names, metrics, and sample case study content are placeholders. Replace them with accurate, approved work before making the site public. Do not publish private client work, invented results, or testimonials without approval.
 
-The admin dashboard is a visual preview and does not save edits. Contact submissions are sent server-side through Resend and are not stored by this app.
+The admin dashboard is connected to the public portfolio. It supports project and case-study CRUD, draft/published visibility, featured-project selection, ordering, editable metrics/services/skills/principles/settings, image uploads, and an enquiry inbox. Content and enquiries are persisted in the SQLite file configured by `DATABASE_URL`.
+
+Uploaded media is stored in `public/uploads` and indexed in the content database. Both the SQLite file and uploaded-media directory are ignored by Git; back them up with the rest of the site data.
 
 ## Configure contact delivery
 
@@ -55,17 +58,16 @@ The admin dashboard is a visual preview and does not save edits. Contact submiss
 3. Set `CONTACT_TO_EMAIL` to the inbox that should receive submissions.
 4. The default sender is `Pogdog Portfolio <onboarding@resend.dev>`, intended for testing to the account's own verified inbox. For general delivery, verify a domain in Resend and set `CONTACT_FROM_EMAIL` to an address on that domain.
 
-The form uses a server route, so the Resend key stays private. Visitors can reply directly to the email address they entered in the form.
+The form always stores a valid submission in the admin inbox. When Resend is configured, it also emails the configured recipient; if delivery is unavailable, the saved enquiry remains available in the dashboard. Visitors can be contacted directly from the inbox.
 
-## Deploy on Vercel
+## Deploy
 
-1. Push this folder to a Git repository and import it as a new Vercel project.
-2. Add `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, and `AUTH_SECRET` as Vercel environment variables. Use a unique production password and a new secret.
-3. Set `NEXT_PUBLIC_SITE_URL` to the deployed HTTPS domain.
-4. Add `RESEND_API_KEY` and `CONTACT_TO_EMAIL` to Vercel Production; add `CONTACT_FROM_EMAIL` after verifying a sender domain.
-5. Deploy, then check `/`, `/work/featured-project`, `/admin/login`, and `/admin`.
+1. Deploy to a Node.js host with a persistent writable volume for the SQLite database and `public/uploads`.
+2. Add `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `AUTH_SECRET`, `DATABASE_URL`, and `NEXT_PUBLIC_SITE_URL` as production environment variables. Use a unique production password and a new secret.
+3. Add `RESEND_API_KEY` and `CONTACT_TO_EMAIL`; add `CONTACT_FROM_EMAIL` after verifying a sender domain.
+4. Back up the database and uploads volume, then check `/`, a published `/work/[slug]` page, `/admin/login`, and `/admin`.
 
-Vercel detects the Next.js framework and uses the `build` script in `package.json`.
+Vercel can run the public site, but its serverless filesystem is not durable. The current SQLite and local-upload adapter therefore requires a host with persistent storage; use an external database and object-storage adapter before deploying the editable dashboard to Vercel.
 
 ## Checks
 

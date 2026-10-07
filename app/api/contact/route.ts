@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createEnquiry, setEnquiryDeliveryStatus } from "@/lib/content-store";
 
 const projectTypes = new Set([
   "Production debugging",
@@ -7,6 +8,26 @@ const projectTypes = new Set([
   "UI / controller navigation",
   "Performance optimization",
 ]);
+
+type ContactRateGlobal = typeof globalThis & { __pogdogContactRates?: Map<string, { count: number; resetAt: number }> };
+
+function acceptsSubmission(request: Request) {
+  const shared = globalThis as ContactRateGlobal;
+  const rates = shared.__pogdogContactRates ??= new Map();
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+  const key = forwarded || request.headers.get("x-real-ip") || "local";
+  const now = Date.now();
+  const configured = Number(process.env.CONTACT_RATE_LIMIT || 5);
+  const limit = Number.isFinite(configured) ? Math.min(50, Math.max(1, Math.round(configured))) : 5;
+  const current = rates.get(key);
+  if (!current || current.resetAt <= now) {
+    rates.set(key, { count: 1, resetAt: now + 15 * 60 * 1000 });
+    return true;
+  }
+  if (current.count >= limit) return false;
+  current.count += 1;
+  return true;
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -44,11 +65,20 @@ export async function POST(request: Request) {
   if (!name || name.length < 2 || !validEmail || !description || description.length < 10 || (projectType && !projectTypes.has(projectType))) {
     return NextResponse.json({ error: "Check your name, email, project type, and message, then try again." }, { status: 400 });
   }
+  if (!acceptsSubmission(request)) return NextResponse.json({ error: "Too many enquiries were sent from this connection. Please try again later." }, { status: 429, headers: { "Retry-After": "900" } });
+
+  let enquiry;
+  try {
+    enquiry = createEnquiry({ name, email, discord, projectType, description });
+  } catch (error) {
+    console.error("Unable to store contact enquiry", error);
+    return NextResponse.json({ error: "Your message could not be saved. Please email poggerscape3@gmail.com directly." }, { status: 503 });
+  }
 
   const apiKey = process.env.RESEND_API_KEY;
   const recipient = process.env.CONTACT_TO_EMAIL;
   if (!apiKey || !recipient) {
-    return NextResponse.json({ error: "Contact delivery is not configured yet. Please email poggerscape3@gmail.com directly." }, { status: 503 });
+    return NextResponse.json({ ok: true, delivery: "stored" }, { status: 201 });
   }
 
   const from = process.env.CONTACT_FROM_EMAIL?.trim() || "Pogdog Portfolio <onboarding@resend.dev>";
@@ -82,11 +112,14 @@ export async function POST(request: Request) {
 
     if (!response.ok) {
       console.error("Contact email provider returned an error", response.status);
-      return NextResponse.json({ error: "Your message could not be sent. Please email poggerscape3@gmail.com directly." }, { status: 502 });
+      setEnquiryDeliveryStatus(enquiry.id, "failed");
+      return NextResponse.json({ ok: true, delivery: "stored" }, { status: 201 });
     }
 
-    return NextResponse.json({ ok: true });
+    setEnquiryDeliveryStatus(enquiry.id, "sent");
+    return NextResponse.json({ ok: true, delivery: "sent" }, { status: 201 });
   } catch {
-    return NextResponse.json({ error: "Email delivery is temporarily unavailable. Please email poggerscape3@gmail.com directly." }, { status: 502 });
+    setEnquiryDeliveryStatus(enquiry.id, "failed");
+    return NextResponse.json({ ok: true, delivery: "stored" }, { status: 201 });
   }
 }

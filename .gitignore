@@ -20,6 +20,10 @@
 *.pem
 *.log
 npm-debug.log*
+*.db
+*.db-shm
+*.db-wal
+/public/uploads/
 
 # TypeScript
 next-env.d.ts
