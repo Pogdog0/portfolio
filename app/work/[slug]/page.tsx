@@ -5,6 +5,13 @@ import { getSiteContent } from "@/lib/content-store";
 
 export const dynamic = "force-dynamic";
 
+const socialImage = {
+  url: "/images/social/pogdog-card-v2.png",
+  width: 1200,
+  height: 675,
+  alt: "Pogdog - Roblox gameplay systems engineer",
+};
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const project = (await getSiteContent()).projects.find((item) => item.slug === slug && item.status === "Published" && item.caseStudy.intro);
@@ -23,8 +30,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       locale: "en_US",
       type: "article",
       url,
+      images: [socialImage],
     },
-    twitter: { card: "summary_large_image", title, description },
+    twitter: { card: "summary_large_image", title, description, images: [socialImage] },
   };
 }
 

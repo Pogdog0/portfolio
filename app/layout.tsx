@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 import { getSiteContent } from "@/lib/content-store";
 import "./globals.css";
 
+const socialImage = {
+  url: "/images/social/pogdog-card-v2.png",
+  width: 1200,
+  height: 675,
+  alt: "Pogdog - Roblox gameplay systems engineer",
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const { settings } = await getSiteContent();
   return {
@@ -18,8 +25,9 @@ export async function generateMetadata(): Promise<Metadata> {
       locale: "en_US",
       type: "website",
       url: "/",
+      images: [socialImage],
     },
-    twitter: { card: "summary_large_image", title: settings.seoTitle, description: settings.seoDescription },
+    twitter: { card: "summary_large_image", title: settings.seoTitle, description: settings.seoDescription, images: [socialImage] },
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   };
 }

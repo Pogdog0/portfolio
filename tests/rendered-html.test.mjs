@@ -92,8 +92,11 @@ test("server-renders the portfolio homepage", async () => {
   assert.match(html, /Pogdog/i);
   assert.match(html, /Roblox/i);
   assert.match(html, /<meta name="twitter:card" content="summary_large_image"/);
-  const socialImage = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+  const socialImages = [...html.matchAll(/<meta property="og:image" content="([^"]+)"/g)];
+  assert.equal(socialImages.length, 1);
+  const socialImage = socialImages[0]?.[1];
   assert.ok(socialImage);
+  assert.match(socialImage, /\/images\/social\/pogdog-card-v2\.png$/);
   const imageMetadataUrl = new URL(socialImage.replaceAll("&amp;", "&"));
   const imageResponse = await fetch(new URL(`${imageMetadataUrl.pathname}${imageMetadataUrl.search}`, baseUrl));
   assert.equal(imageResponse.status, 200);
@@ -115,9 +118,11 @@ test("server-renders protected-area surfaces and the case study route", async ()
   const caseStudyHtml = await caseStudy.text();
   assert.match(caseStudyHtml, /What was happening|Featured Project/i);
   assert.match(caseStudyHtml, /<meta property="og:title" content="West Indies - Roblox case study \| Pogdog"/);
-  assert.match(caseStudyHtml, /<meta property="og:image" content="[^"]+\/work\/featured-project\/opengraph-image/);
-  const projectSocialImage = caseStudyHtml.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+  const projectSocialImages = [...caseStudyHtml.matchAll(/<meta property="og:image" content="([^"]+)"/g)];
+  assert.equal(projectSocialImages.length, 1);
+  const projectSocialImage = projectSocialImages[0]?.[1];
   assert.ok(projectSocialImage);
+  assert.match(projectSocialImage, /\/images\/social\/pogdog-card-v2\.png$/);
   const projectImageMetadataUrl = new URL(projectSocialImage.replaceAll("&amp;", "&"));
   const projectImageResponse = await fetch(new URL(`${projectImageMetadataUrl.pathname}${projectImageMetadataUrl.search}`, baseUrl));
   assert.equal(projectImageResponse.status, 200);
