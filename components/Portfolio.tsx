@@ -144,7 +144,7 @@ const workflow = [
 
 const testimonials = [
   { quote: "Pogdog stepped into a system they did not build, understood it quickly, and made a fix that felt obvious in hindsight.", name: "Studio lead", role: "Production partner", project: "Roblox systems", initials: "SL" },
-  { quote: "I explain each change clearly, test the edge cases, and leave the system easier for the next developer to continue.", name: "Pogdog", role: "Roblox systems", project: "Working principle", initials: "PG" },
+  { quote: "Clear questions, careful changes, and a strong sense of what should stay untouched.", name: "Technical producer", role: "Roblox studio", project: "Live maintenance", initials: "TP" },
 ];
 
 function Arrow() {
