@@ -462,6 +462,9 @@ button { color: inherit; }
 .admin-content { flex: 1; padding: 32px 4vw 70px; }
 .admin-error { display: flex; justify-content: space-between; gap: 20px; margin: 16px 4vw 0; padding: 13px 15px; border: 1px solid rgba(255,112,112,.35); background: rgba(120,30,30,.18); color: #ffaaaa; font: 10px/1.5 var(--mono); }
 .admin-error button { border: 0; background: transparent; color: inherit; cursor: pointer; }
+.admin-storage-notice { display: flex; align-items: center; gap: 16px; margin: 16px 4vw 0; padding: 13px 15px; border: 1px solid rgba(85,168,255,.35); background: rgba(32,85,130,.16); font: 10px/1.5 var(--mono); }
+.admin-storage-notice strong { color: var(--signal); text-transform: uppercase; }
+.admin-storage-notice span { color: #91a9bd; }
 .admin-announce { display: flex; align-items: center; gap: 15px; padding: 16px 20px; border: 1px solid rgba(233,91,66,.25); background: rgba(233,91,66,.07); }
 .admin-announce > div { flex: 1; }
 .admin-announce strong { font: 12px var(--mono); }

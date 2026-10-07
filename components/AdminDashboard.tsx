@@ -68,7 +68,7 @@ function ProjectEditor({ project, media, initialTab, onClose, onSave }: { projec
   </form></div>;
 }
 
-export default function AdminDashboard({ initialContent, initialEnquiries }: { initialContent: SiteContent; initialEnquiries: Enquiry[] }) {
+export default function AdminDashboard({ initialContent, initialEnquiries, storageWritable }: { initialContent: SiteContent; initialEnquiries: Enquiry[]; storageWritable: boolean }) {
   const [active, setActive] = useState("Dashboard");
   const [content, setContent] = useState(initialContent);
   const [enquiries, setEnquiries] = useState(initialEnquiries);
@@ -106,6 +106,7 @@ export default function AdminDashboard({ initialContent, initialEnquiries }: { i
   }
 
   async function persist(next: SiteContent, message = "Changes saved") {
+    if (!storageWritable) { setError("This deployment is read-only. Connect persistent database and object storage to enable admin changes on Vercel."); return false; }
     setSaving(true); setError(""); setContent(next);
     try {
       const response = await fetch("/api/admin/content", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: next }) });
@@ -149,12 +150,14 @@ export default function AdminDashboard({ initialContent, initialEnquiries }: { i
   }
 
   async function updateEnquiry(id: string, status: EnquiryStatus) {
+    if (!storageWritable) { setError("This deployment is read-only. Enquiry updates require persistent storage."); return; }
     const previous = enquiries; setEnquiries((current) => current.map((item) => item.id === id ? { ...item, status } : item));
     const response = await fetch(`/api/admin/enquiries/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ status }) });
     if (!response.ok) { setEnquiries(previous); setError("Unable to update the enquiry."); return; } flash("Enquiry updated");
   }
 
   async function removeEnquiry(id: string) {
+    if (!storageWritable) { setError("This deployment is read-only. Enquiry updates require persistent storage."); return; }
     if (!window.confirm("Delete this enquiry? This cannot be undone.")) return;
     const response = await fetch(`/api/admin/enquiries/${id}`, { method: "DELETE" });
     if (!response.ok) { setError("Unable to delete the enquiry."); return; }
@@ -162,7 +165,9 @@ export default function AdminDashboard({ initialContent, initialEnquiries }: { i
   }
 
   async function uploadMedia(file?: File) {
-    if (!file) return; setUploading(true); setError("");
+    if (!file) return;
+    if (!storageWritable) { setError("This deployment is read-only. Media uploads require persistent object storage."); return; }
+    setUploading(true); setError("");
     const form = new FormData(); form.set("file", file);
     try {
       const response = await fetch("/api/admin/media", { method: "POST", body: form }); const result = await response.json().catch(() => ({}));
@@ -192,7 +197,8 @@ export default function AdminDashboard({ initialContent, initialEnquiries }: { i
       <div className="admin-user"><span className="admin-avatar">PD</span><div><strong>Pogdog</strong><small>Administrator</small></div><button onClick={logout} aria-label="Sign out">↪</button></div>
     </aside>
     <main className="admin-main">
-      <header className="admin-header"><div><span className="admin-breadcrumb">CONTENT OS / {active.toUpperCase()}</span><h1>{active}</h1></div><div className="admin-header-actions"><a href="/" target="_blank" rel="noreferrer" className="admin-preview">View live site ↗</a><button className="admin-add" onClick={() => editProject(emptyProject(content.projects.length))}>+ New project</button></div></header>
+      <header className="admin-header"><div><span className="admin-breadcrumb">CONTENT OS / {active.toUpperCase()}</span><h1>{active}</h1></div><div className="admin-header-actions"><a href="/" target="_blank" rel="noreferrer" className="admin-preview">View live site ↗</a><button className="admin-add" disabled={!storageWritable} title={!storageWritable ? "Persistent storage is required" : undefined} onClick={() => editProject(emptyProject(content.projects.length))}>+ New project</button></div></header>
+      {!storageWritable && <div className="admin-storage-notice" role="status"><strong>Read-only deployment</strong><span>The public site is online, but Vercel needs an external database and object storage before admin changes can be saved.</span></div>}
       {error && <div className="admin-error" role="alert"><span>{error}</span><button onClick={() => setError("")} aria-label="Dismiss error">×</button></div>}
       <div className="admin-content">
         {active === "Dashboard" && <>

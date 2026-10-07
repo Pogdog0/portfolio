@@ -67,7 +67,7 @@ The form always stores a valid submission in the admin inbox. When Resend is con
 3. Add `RESEND_API_KEY` and `CONTACT_TO_EMAIL`; add `CONTACT_FROM_EMAIL` after verifying a sender domain.
 4. Back up the database and uploads volume, then check `/`, a published `/work/[slug]` page, `/admin/login`, and `/admin`.
 
-Vercel can run the public site, but its serverless filesystem is not durable. The current SQLite and local-upload adapter therefore requires a host with persistent storage; use an external database and object-storage adapter before deploying the editable dashboard to Vercel.
+Vercel can run the public site, but its serverless filesystem is not durable. On Vercel the site safely serves the bundled content and marks the dashboard read-only instead of attempting SQLite writes. Use an external database and object-storage adapter before enabling dashboard edits there.
 
 ## Checks
 

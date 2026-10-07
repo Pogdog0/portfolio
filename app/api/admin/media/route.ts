@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { isContentStoreWritable } from "@/lib/content-store";
 
 const allowed = new Map([
   ["image/jpeg", ".jpg"],
@@ -12,6 +13,7 @@ const allowed = new Map([
 
 export async function POST(request: Request) {
   if (!await isAdminAuthenticated()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!isContentStoreWritable()) return NextResponse.json({ error: "Media uploads require persistent object storage on this deployment." }, { status: 503 });
   try {
     const form = await request.formData();
     const file = form.get("file");

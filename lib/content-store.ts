@@ -7,6 +7,13 @@ import { defaultContent, type Enquiry, type EnquiryStatus, type SiteContent } fr
 
 type StoreGlobal = typeof globalThis & { __pogdogDatabase?: DatabaseSync };
 
+const storageMessage = "Persistent admin storage is not configured for this deployment. Use a Node.js host with a writable volume or connect an external database.";
+
+export function isContentStoreWritable() {
+  const configured = process.env.DATABASE_URL?.trim() || "file:./data/portfolio.db";
+  return !(process.env.VERCEL && configured.startsWith("file:"));
+}
+
 function databasePath() {
   const configured = process.env.DATABASE_URL?.trim() || "file:./data/portfolio.db";
   if (!configured.startsWith("file:")) {
@@ -21,6 +28,7 @@ function databasePath() {
 }
 
 function getDatabase() {
+  if (!isContentStoreWritable()) throw new Error(storageMessage);
   const shared = globalThis as StoreGlobal;
   if (shared.__pogdogDatabase) return shared.__pogdogDatabase;
   const db = new DatabaseSync(databasePath());
@@ -54,7 +62,13 @@ function getDatabase() {
 }
 
 export function getSiteContent(): SiteContent {
-  const row = getDatabase().prepare("SELECT data FROM site_content WHERE id = 1").get() as { data?: string } | undefined;
+  let row: { data?: string } | undefined;
+  try {
+    row = getDatabase().prepare("SELECT data FROM site_content WHERE id = 1").get() as { data?: string } | undefined;
+  } catch (error) {
+    if (process.env.VERCEL) return structuredClone(defaultContent);
+    throw error;
+  }
   if (!row?.data) return structuredClone(defaultContent);
   try {
     const parsed = JSON.parse(row.data) as Partial<SiteContent>;
@@ -77,10 +91,16 @@ export function saveSiteContent(content: SiteContent) {
 }
 
 export function listEnquiries(): Enquiry[] {
-  const rows = getDatabase().prepare(`
-    SELECT id, name, email, discord, project_type, description, status, delivery_status, created_at
-    FROM enquiries ORDER BY created_at DESC
-  `).all() as Array<Record<string, string>>;
+  let rows: Array<Record<string, string>>;
+  try {
+    rows = getDatabase().prepare(`
+      SELECT id, name, email, discord, project_type, description, status, delivery_status, created_at
+      FROM enquiries ORDER BY created_at DESC
+    `).all() as Array<Record<string, string>>;
+  } catch (error) {
+    if (process.env.VERCEL) return [];
+    throw error;
+  }
   return rows.map((row) => ({
     id: row.id,
     name: row.name,
