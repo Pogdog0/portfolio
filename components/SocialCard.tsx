@@ -9,49 +9,30 @@ type SocialCardProps = {
   tags?: string[];
 };
 
-export default function SocialCard({ eyebrow, title, summary, imageSrc, accent = "#55a8ff", tags = [] }: SocialCardProps) {
-  const visibleTags = tags.filter(Boolean).slice(0, 3);
+export default function SocialCard({ eyebrow, title, summary, imageSrc, accent = "#55a8ff" }: SocialCardProps) {
+  const titleSize = title.length <= 8 ? 158 : title.length <= 14 ? 124 : 94;
   return <div style={{
     width: "100%",
     height: "100%",
     display: "flex",
     position: "relative",
     overflow: "hidden",
-    color: "#f5f9fb",
+    color: "#f3f1e9",
     background: "#04090c",
     fontFamily: "Arial, sans-serif",
   }}>
     <img src={imageSrc} alt="" width={1200} height={630} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-    <div style={{ position: "absolute", inset: 0, display: "flex", background: "rgba(2,7,10,0.28)" }} />
-    <div style={{ position: "absolute", left: 48, top: 138, bottom: 54, width: 725, display: "flex", background: "rgba(2,7,10,0.78)", border: "1px solid rgba(181,214,228,0.14)", borderRadius: 18, boxShadow: "0 22px 70px rgba(0,0,0,0.48)" }} />
-    <div style={{ position: "absolute", left: 48, top: 138, width: 215, height: 12, display: "flex", borderTop: `2px solid ${accent}`, borderLeft: `2px solid ${accent}`, borderTopLeftRadius: 18 }} />
-    <div style={{ position: "absolute", inset: 34, display: "flex", border: "1px solid rgba(187,220,235,0.18)", borderRadius: 22 }} />
-    <div style={{ position: "absolute", top: 34, left: 34, width: 245, height: 14, display: "flex", borderTop: `2px solid ${accent}`, borderLeft: `2px solid ${accent}`, borderTopLeftRadius: 22 }} />
-    <div style={{ position: "absolute", right: 34, bottom: 34, width: 170, height: 14, display: "flex", borderRight: `2px solid ${accent}`, borderBottom: `2px solid ${accent}`, borderBottomRightRadius: 22 }} />
+    <div style={{ position: "absolute", inset: 0, display: "flex", background: "rgba(2,7,10,0.22)" }} />
+    <div style={{ position: "absolute", left: 30, top: 48, bottom: 48, width: 790, display: "flex", background: "rgba(2,7,10,0.79)", border: "1px solid rgba(194,218,228,0.22)", borderRadius: 8, boxShadow: "0 24px 80px rgba(0,0,0,0.58)" }} />
+    <div style={{ position: "absolute", left: 30, top: 48, width: 625, height: 12, display: "flex", borderTop: `3px solid ${accent}`, borderLeft: `3px solid ${accent}`, borderTopLeftRadius: 8 }} />
+    <div style={{ position: "absolute", left: 52, top: 70, bottom: 70, width: 1, display: "flex", background: "rgba(213,229,236,0.16)" }} />
 
-    <div style={{ width: "100%", height: "100%", padding: "58px 70px", display: "flex", flexDirection: "column", justifyContent: "space-between", position: "relative" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 13 }}>
-          <div style={{ width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 7, background: accent, color: "#061016", fontSize: 21, fontWeight: 900 }}>P</div>
-          <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: 3.5 }}>POGDOG / PORTFOLIO</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 9, padding: "8px 13px", border: "1px solid rgba(255,255,255,0.19)", borderRadius: 999, color: "#d2dde2", fontSize: 12, letterSpacing: 2 }}>
-          <span style={{ width: 8, height: 8, display: "flex", borderRadius: 999, background: "#69e59a", boxShadow: "0 0 14px #69e59a" }} />
-          AVAILABLE / REMOTE
-        </div>
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", maxWidth: 790, marginTop: 40 }}>
-        <div style={{ display: "flex", fontSize: title.length > 20 ? 88 : 110, lineHeight: 0.91, fontWeight: 900, letterSpacing: 0, textShadow: "0 4px 24px rgba(0,0,0,0.82)" }}>{title}</div>
-        <div style={{ width: 96, height: 4, display: "flex", background: accent, marginTop: 25, marginBottom: 18 }} />
-        <span style={{ color: accent, fontSize: 19, fontWeight: 800, letterSpacing: 2.5 }}>{eyebrow.toUpperCase()}</span>
-        <span style={{ color: "#c1cdd2", fontSize: 20, lineHeight: 1.35, marginTop: 12, maxWidth: 720 }}>{summary}</span>
-      </div>
-
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        {(visibleTags.length ? visibleTags : ["LUAU", "GAMEPLAY SYSTEMS", "PRODUCTION DEBUGGING"]).map((tag) => <span key={tag} style={{ padding: "8px 12px", background: "rgba(3,8,11,0.68)", border: "1px solid rgba(255,255,255,0.20)", borderRadius: 6, color: "#e0e8ec", fontSize: 12, fontWeight: 700, letterSpacing: 1.2 }}>{tag.toUpperCase()}</span>)}
-        <span style={{ marginLeft: "auto", color: "#a6b6bd", fontSize: 12, letterSpacing: 2 }}>ROBLOX ENGINEERING / 2026</span>
-      </div>
+    <div style={{ position: "relative", width: 760, height: "100%", padding: "116px 72px 92px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <div style={{ display: "flex", fontSize: titleSize, lineHeight: 0.86, fontWeight: 900, letterSpacing: -2, textShadow: "0 5px 30px rgba(0,0,0,0.88)" }}>{title}</div>
+      <div style={{ width: 620, height: 5, display: "flex", background: accent, marginTop: 32, marginBottom: 22 }} />
+      <div style={{ display: "flex", color: accent, fontSize: 28, lineHeight: 1.05, fontWeight: 900, letterSpacing: 1.4, textShadow: "0 3px 18px rgba(0,0,0,0.9)" }}>{eyebrow.toUpperCase()}</div>
+      <div style={{ width: 620, height: 1, display: "flex", background: "rgba(218,230,235,0.46)", marginTop: 20, marginBottom: 18 }} />
+      <div style={{ display: "flex", color: "#c2c9c7", fontSize: 25, lineHeight: 1.25, fontWeight: 600, letterSpacing: 0.3, maxWidth: 630 }}>{summary}</div>
     </div>
   </div>;
 }
