@@ -4,7 +4,7 @@ import { join } from "node:path";
 import sharp from "sharp";
 import SocialCard from "@/components/SocialCard";
 
-export const alt = "Pogdog - Roblox gameplay systems engineer";
+export const alt = "Pogdog - Roblox gameplay systems engineer portfolio card";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
