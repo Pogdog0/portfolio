@@ -9,9 +9,22 @@ type StoreGlobal = typeof globalThis & { __pogdogDatabase?: DatabaseSync };
 
 const storageMessage = "Persistent admin storage is not configured for this deployment. Use a Node.js host with a writable volume or connect an external database.";
 
-export function isContentStoreWritable() {
+function usesFileStore() {
   const configured = process.env.DATABASE_URL?.trim() || "file:./data/portfolio.db";
-  return !(process.env.VERCEL && configured.startsWith("file:"));
+  return configured.startsWith("file:");
+}
+
+function declaresReadOnlyRuntime() {
+  return usesFileStore() && Boolean(process.env.VERCEL || process.env.NOW_REGION || process.env.AWS_LAMBDA_FUNCTION_NAME);
+}
+
+export function isContentStoreWritable() {
+  try {
+    getDatabase();
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function databasePath() {
@@ -28,7 +41,7 @@ function databasePath() {
 }
 
 function getDatabase() {
-  if (!isContentStoreWritable()) throw new Error(storageMessage);
+  if (declaresReadOnlyRuntime()) throw new Error(storageMessage);
   const shared = globalThis as StoreGlobal;
   if (shared.__pogdogDatabase) return shared.__pogdogDatabase;
   const db = new DatabaseSync(databasePath());
@@ -66,7 +79,7 @@ export function getSiteContent(): SiteContent {
   try {
     row = getDatabase().prepare("SELECT data FROM site_content WHERE id = 1").get() as { data?: string } | undefined;
   } catch (error) {
-    if (process.env.VERCEL) return structuredClone(defaultContent);
+    if (usesFileStore()) return structuredClone(defaultContent);
     throw error;
   }
   if (!row?.data) return structuredClone(defaultContent);
@@ -98,7 +111,7 @@ export function listEnquiries(): Enquiry[] {
       FROM enquiries ORDER BY created_at DESC
     `).all() as Array<Record<string, string>>;
   } catch (error) {
-    if (process.env.VERCEL) return [];
+    if (usesFileStore()) return [];
     throw error;
   }
   return rows.map((row) => ({
