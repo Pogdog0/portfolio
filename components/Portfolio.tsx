@@ -166,14 +166,35 @@ function ProjectCard({ project, onOpen }: { project: Project; onOpen: (project: 
 }
 
 function ContactForm() {
-  const [sent, setSent] = useState(false);
-  function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setSent(true); }
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [error, setError] = useState("");
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setStatus("sending");
+    setError("");
+    const form = event.currentTarget;
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form).entries())),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(typeof result.error === "string" ? result.error : "Unable to send your message right now.");
+      form.reset();
+      setStatus("sent");
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Unable to send your message right now.");
+      setStatus("error");
+    }
+  }
   return <form className="contact-form" onSubmit={submit}>
     <input className="honeypot" tabIndex={-1} autoComplete="off" aria-hidden="true" name="company" />
-    <div className="form-grid"><label><span>Your name</span><input required name="name" placeholder="Your name or studio" /></label><label><span>Email</span><input required type="email" name="email" placeholder="you@example.com" /></label><label><span>Discord username (optional)</span><input name="discord" placeholder="Discord handle (optional)" /></label><label><span>Project type</span><select name="projectType" defaultValue=""><option value="" disabled>Select one</option><option>Production debugging</option><option>Gameplay systems</option><option>Vehicle systems</option><option>UI / controller navigation</option><option>Performance optimization</option></select></label></div>
-    <label><span>What needs solving?</span><textarea required name="description" rows={4} placeholder="What broke, what you tried, and what a good outcome looks like." /></label>
-    <div className="form-footer"><p className="form-note">Usually replies within 1–2 business days.<br />IST / UTC+05:30 · Remote.</p><button className="button button-solid" type="submit">{sent ? "Form preview" : "Preview contact form"}<Arrow /></button></div>
-    {sent && <p className="form-success" role="status">This preview does not send or store messages. Use a direct contact link once one is added.</p>}
+    <div className="form-grid"><label><span>Your name</span><input required maxLength={120} name="name" placeholder="Your name or studio" /></label><label><span>Email</span><input required maxLength={254} type="email" name="email" placeholder="you@example.com" /></label><label><span>Discord username (optional)</span><input maxLength={100} name="discord" placeholder="Discord handle (optional)" /></label><label><span>Project type</span><select name="projectType" defaultValue=""><option value="">Select one</option><option>Production debugging</option><option>Gameplay systems</option><option>Vehicle systems</option><option>UI / controller navigation</option><option>Performance optimization</option></select></label></div>
+    <label><span>What needs solving?</span><textarea required maxLength={5000} name="description" rows={4} placeholder="What broke, what you tried, and what a good outcome looks like." /></label>
+    <div className="form-footer"><p className="form-note">Usually replies within 1–2 business days.<br />IST / UTC+05:30 · Remote.</p><button className="button button-solid" type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : status === "sent" ? "Message sent" : "Send enquiry"}<Arrow /></button></div>
+    {status === "sent" && <p className="form-success" role="status">Thanks, your enquiry was sent. I’ll reply within 1–2 business days.</p>}
+    {status === "error" && <p className="form-error" role="alert">{error}</p>}
   </form>;
 }
 
@@ -229,7 +250,7 @@ export default function Portfolio() {
 
     <section className="testimonials-section section-pad"><SectionLabel index="07">Good work leaves a trail</SectionLabel><div className="testimonials-layout"><div><h2>Built to be<br /><span>trusted.</span></h2><p className="section-copy">Clear questions, careful changes, and systems that are easier to continue.</p></div><div className="testimonial-stage"><article className="testimonial-card"><div className="testimonial-quote">“</div><p>{testimonials[testimonialIndex].quote}</p><div className="testimonial-person"><span className="testimonial-avatar">{testimonials[testimonialIndex].initials}</span><div><strong>{testimonials[testimonialIndex].name}</strong><small>{testimonials[testimonialIndex].role} · {testimonials[testimonialIndex].project}</small></div></div></article><div className="testimonial-controls"><span>0{testimonialIndex + 1} / 0{testimonials.length}</span><div><button onClick={() => setTestimonialIndex((current) => (current - 1 + testimonials.length) % testimonials.length)} aria-label="Previous testimonial">←</button><button onClick={() => setTestimonialIndex((current) => (current + 1) % testimonials.length)} aria-label="Next testimonial">→</button></div></div></div></div></section>
 
-    <section className="contact-section section-pad" id="contact"><div className="contact-copy"><SectionLabel index="08">Contact</SectionLabel><h2>Have a Roblox project<br /><span>worth building?</span></h2><p>For project enquiries, share what broke, what you tried, and what a good outcome looks like.</p><div className="contact-details"><span>IST / UTC+05:30 · REMOTE</span><span>Available for select production work · Replies in 1–2 business days</span></div></div><ContactForm /></section>
+    <section className="contact-section section-pad" id="contact"><div className="contact-copy"><SectionLabel index="08">Contact</SectionLabel><h2>Have a Roblox project<br /><span>worth building?</span></h2><p>For project enquiries, share what broke, what you tried, and what a good outcome looks like.</p><div className="contact-details"><a href="mailto:poggerscape3@gmail.com">poggerscape3@gmail.com <Arrow /></a><span>IST / UTC+05:30 · REMOTE</span><span>Available for select production work · Replies in 1–2 business days</span></div></div><ContactForm /></section>
 
     <footer className="site-footer"><div className="footer-brand"><span className="brand-mark">P</span><span>Pogdog / ROBLOX SYSTEMS</span></div><p>Production debugging · gameplay systems · live-game maintenance</p><div><a href="#top">Back to top ↑</a><span>© 2026</span></div></footer>
 

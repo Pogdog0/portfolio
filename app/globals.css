@@ -262,6 +262,7 @@ button { color: inherit; }
 .form-footer { display: flex; gap: 20px; justify-content: space-between; align-items: end; margin-top: 25px; }
 .form-note { margin: 0; color: #667067; font: 10px/1.6 var(--mono); }
 .form-success { margin: 22px 0 0; color: var(--signal); font: 10px/1.5 var(--mono); }
+.form-error { margin: 22px 0 0; color: #ff9388; font: 10px/1.5 var(--mono); }
 
 .site-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: center; padding: 30px 6vw 36px; border-top: 1px solid var(--line); color: #69726a; font: 9px var(--mono); letter-spacing: .07em; text-transform: uppercase; }
 .footer-brand { display: flex; align-items: center; gap: 10px; color: var(--paper); }
