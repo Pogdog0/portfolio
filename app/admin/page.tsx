@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { ADMIN_SESSION_COOKIE, verifySessionToken } from "@/lib/auth";
 
-export const metadata = { title: "Admin — PogDog Content OS" };
+export const metadata = { title: "Admin — Pogdog Content OS" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {

@@ -11,93 +11,80 @@ type Project = {
   image: string;
   category: string;
   tags: string[];
-  role: string;
-  period: string;
-  result: string;
+  role?: string;
+  period?: string;
+  result?: string;
   accent: string;
   videoUrl?: string;
 };
 
-// Replace this with PogDog's real Discord profile URL before publishing.
-const discordUrl = "#contact";
-
 const projects: Project[] = [
   {
     slug: "tower-defense",
-    title: "Project One",
+    title: "Tower Defense",
     eyebrow: "Gameplay systems / 01",
-    description: "Replace this with a concise description of PogDog's first project.",
-      image: "/images/projects/tower-defense.webp",
+    description: "Wave logic, progression, and readable systems built for repeatable play.",
+    image: "/images/projects/tower-defense.webp",
     category: "Gameplay Systems",
     tags: ["Luau", "Progression", "Systems"],
-    role: "Add role",
-    period: "Add period",
-    result: "Add a measurable or clearly described result",
+    result: "Repeatable wave logic and progression systems.",
     accent: "#55a8ff",
   },
   {
     slug: "pvp",
-    title: "Project Two",
+    title: "PvP",
     eyebrow: "Combat systems / 02",
-    description: "Replace this with the problem solved, the work completed, and the outcome.",
-      image: "/images/projects/pvp.webp",
+    description: "Responsive round flow, player states, and combat interactions that stay predictable.",
+    image: "/images/projects/pvp.webp",
     category: "Gameplay Systems",
     tags: ["Combat", "State", "Client-server"],
-    role: "Add role",
-    period: "Add period",
-    result: "Add result",
+    result: "Predictable combat interactions and round flow.",
     accent: "#9fd4ff",
   },
   {
     slug: "tycoon",
-    title: "Project Three",
+    title: "Tycoon",
     eyebrow: "Progression / 03",
-    description: "Add a short project summary. Keep it specific and easy to verify.",
-      image: "/images/projects/tycoon.webp",
+    description: "Upgrade paths, interaction logic, and progression that players can understand at a glance.",
+    image: "/images/projects/tycoon.webp",
     category: "Gameplay Systems",
     tags: ["Tycoon", "UI", "DataStores"],
-    role: "Add role",
-    period: "Add period",
-    result: "Add result",
+    result: "Clear upgrade paths and readable progression.",
     accent: "#d9ecff",
   },
   {
     slug: "car-kits",
-    title: "Project Four",
+    title: "Car Kits",
     eyebrow: "Vehicle systems / 04",
-    description: "Use this card for a vehicle, systems, UI, or other specialist project.",
-      image: "/images/projects/car-kits.webp",
+    description: "Vehicle foundations, tuning touchpoints, and the practical details that make cars feel right.",
+    image: "/images/projects/car-kits.webp",
     category: "Vehicle Systems",
     tags: ["Vehicles", "Tuning", "A-Chassis"],
-    role: "Add role",
-    period: "Add period",
-    result: "Add result",
+    result: "Vehicle foundations, tuning, and handling work.",
     accent: "#73c7ff",
   },
   {
     slug: "coin-collection",
-    title: "Project Five",
+    title: "Coin Collection",
     eyebrow: "Interaction loop / 05",
-    description: "Use this card for a smaller experiment, prototype, or personal project.",
-      image: "/images/projects/coin-collection.webp",
+    description: "Collection feedback, interaction flow, and persistence touchpoints without unnecessary complexity.",
+    image: "/images/projects/coin-collection.webp",
     category: "Personal Projects",
     tags: ["Interaction", "Feedback", "Persistence"],
-    role: "Add role",
-    period: "Add period",
-    result: "Add result",
+    result: "A clear collection loop with feedback and persistence.",
     accent: "#b09af5",
   },
   {
     slug: "featured-project",
-    title: "Featured Project",
-    eyebrow: "Featured case study / 06",
-    description: "Replace this with PogDog's strongest case study and a truthful one-line outcome.",
-      image: "/images/projects/west-indies.webp",
+    title: "West Indies",
+    eyebrow: "Live production work / 06",
+    description: "DataStore recovery under live load: throttling, data loss, and persistence fixes.",
+    image: "/images/projects/west-indies.webp",
     category: "Production Work",
-    tags: ["Primary skill", "Contribution", "Outcome"],
-    role: "Add role",
-    period: "Add period",
-    result: "Add a verified result",
+    tags: ["DataStores", "Throttling", "Recovery"],
+    role: "Gameplay Systems Developer",
+    period: "1-week recovery sprint",
+    result: "Stable saving for large player data at 500 CCU every day.",
     accent: "#70d6ff",
   },
 ];
@@ -105,10 +92,10 @@ const projects: Project[] = [
 const filters = ["All work", "Gameplay Systems", "Production Work", "Vehicle Systems", "Personal Projects"];
 
 const metrics = [
-  { value: "00+", label: "Years in Roblox Studio", note: "Replace with an accurate number" },
-  { value: "00", label: "Projects shipped", note: "Replace with a verified count" },
-  { value: "00", label: "Peak players / result", note: "Replace or remove" },
-  { value: "∞", label: "Room to keep learning", note: "Personalize this signal" },
+  { value: "5+", label: "Years on Roblox Studio", note: "Building and maintaining Roblox systems" },
+  { value: "700K+", label: "Robux earned", note: "Across Roblox development work" },
+  { value: "300K", label: "Largest commission", note: "Single project payment" },
+  { value: "∞", label: "Messy codebases welcome", note: "Root cause over rewrite" },
 ];
 
 const skillBadges = [
@@ -156,8 +143,8 @@ const workflow = [
 ];
 
 const testimonials = [
-  { quote: "Replace this with a real client testimonial. Never publish an invented endorsement.", name: "Client name", role: "Role or studio", project: "Project", initials: "CN" },
-  { quote: "Add a second verified testimonial here, or remove this item until one is available.", name: "Client name", role: "Role or studio", project: "Project", initials: "CN" },
+  { quote: "I communicate clearly, make focused changes, and leave existing systems easier for the team to continue.", name: "Pogdog", role: "Roblox systems", project: "Working principle", initials: "PG" },
+  { quote: "Understand the failure first. Fix the cause, test the edge cases, and document the change.", name: "Pogdog", role: "Roblox systems", project: "Working principle", initials: "PG" },
 ];
 
 function Arrow() {
@@ -183,10 +170,10 @@ function ContactForm() {
   function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setSent(true); }
   return <form className="contact-form" onSubmit={submit}>
     <input className="honeypot" tabIndex={-1} autoComplete="off" aria-hidden="true" name="company" />
-    <div className="form-grid"><label><span>Your name</span><input required name="name" placeholder="Jane / Studio" /></label><label><span>Email</span><input required type="email" name="email" placeholder="hello@studio.com" /></label><label><span>Discord username</span><input name="discord" placeholder="your_discord" /></label><label><span>Project type</span><select name="projectType" defaultValue=""><option value="" disabled>Select one</option><option>Production debugging</option><option>Gameplay systems</option><option>Vehicle systems</option><option>UI / controller navigation</option><option>Performance optimization</option></select></label></div>
-    <label><span>What needs solving?</span><textarea required name="description" rows={4} placeholder="System, issue, and what a good outcome looks like." /></label>
-    <div className="form-footer"><p className="form-note">Usually replies within 1–2 business days.<br />IST / UTC+05:30 · Remote.</p><button className="button button-solid" type="submit">{sent ? "Message queued" : "Start a conversation"}<Arrow /></button></div>
-    {sent && <p className="form-success" role="status">Thanks — your brief is captured in this demo.</p>}
+    <div className="form-grid"><label><span>Your name</span><input required name="name" placeholder="Your name or studio" /></label><label><span>Email</span><input required type="email" name="email" placeholder="you@example.com" /></label><label><span>Discord username (optional)</span><input name="discord" placeholder="Discord handle (optional)" /></label><label><span>Project type</span><select name="projectType" defaultValue=""><option value="" disabled>Select one</option><option>Production debugging</option><option>Gameplay systems</option><option>Vehicle systems</option><option>UI / controller navigation</option><option>Performance optimization</option></select></label></div>
+    <label><span>What needs solving?</span><textarea required name="description" rows={4} placeholder="What broke, what you tried, and what a good outcome looks like." /></label>
+    <div className="form-footer"><p className="form-note">Usually replies within 1–2 business days.<br />IST / UTC+05:30 · Remote.</p><button className="button button-solid" type="submit">{sent ? "Form preview" : "Preview contact form"}<Arrow /></button></div>
+    {sent && <p className="form-success" role="status">This preview does not send or store messages. Use a direct contact link once one is added.</p>}
   </form>;
 }
 
@@ -217,12 +204,12 @@ export default function Portfolio() {
   }
 
   return <main className="site-shell" onPointerMove={trackPointer}>
-    <div className={`loading-screen ${loading ? "is-visible" : "is-hidden"}`} aria-hidden={!loading}><div className="loading-top"><span>P / ROBLOX DEVELOPER</span><span>PORTFOLIO TEMPLATE</span></div><div className="loading-center"><div className="monogram">P</div><p>Loading PogDog's work.</p></div><div className="loading-bottom"><span>INITIALIZING EXPERIENCE</span><div className="loading-progress"><span style={{ width: `${progress}%` }} /></div><span>{String(progress).padStart(3, "0")}%</span></div></div>
+    <div className={`loading-screen ${loading ? "is-visible" : "is-hidden"}`} aria-hidden={!loading}><div className="loading-top"><span>P / SYSTEMS ENGINEER</span><span>PORTFOLIO 2025—26</span></div><div className="loading-center"><div className="monogram">P</div><p>Loading the work that ships.</p></div><div className="loading-bottom"><span>INITIALIZING EXPERIENCE</span><div className="loading-progress"><span style={{ width: `${progress}%` }} /></div><span>{String(progress).padStart(3, "0")}%</span></div></div>
     <div className="ambient ambient-one" /><div className="ambient ambient-two" /><div className="noise" />
-    <header className="top-nav"><a className="brand" href="#top" aria-label="PogDog home"><span className="brand-mark">P</span><span>POGDOG / <em>ROBLOX DEVELOPER</em></span></a><nav className="desktop-nav" aria-label="Primary navigation"><a href="#work">Selected work</a><a href="#approach">Approach</a><a href="#contact">Contact</a></nav><a className="nav-cta" href="#contact">Available for select work <span className="status-dot" /></a></header>
-    <div className="side-rail side-rail-left"><span>POGDOG / LUAU / SYSTEMS</span><span className="rail-line" /><span>ADD TIMEZONE</span></div><div className="side-rail side-rail-right"><span>SCROLL TO EXPLORE</span><span className="scroll-line" /><span>01—07</span></div>
+    <header className="top-nav"><a className="brand" href="#top" aria-label="Pogdog home"><span className="brand-mark">P</span><span>Pogdog / <em>ROBLOX SYSTEMS</em></span></a><nav className="desktop-nav" aria-label="Primary navigation"><a href="#work">Selected work</a><a href="#approach">Approach</a><a href="#contact">Contact</a></nav><a className="nav-cta" href="#contact">Available for select work <span className="status-dot" /></a></header>
+    <div className="side-rail side-rail-left"><span>Pogdog / LUAU / SYSTEMS</span><span className="rail-line" /><span>IST / UTC+05:30</span></div><div className="side-rail side-rail-right"><span>SCROLL TO EXPLORE</span><span className="scroll-line" /><span>01—07</span></div>
 
-    <section className="hero-section" id="top"><div className="hero-grid" /><div className="hero-copy"><p className="eyebrow hero-eyebrow"><span className="eyebrow-dot" /> PogDog · available for Roblox work</p><p className="hero-name">PogDog</p><h1><span className="hero-outline">Roblox</span><br />Development<br /><span className="hero-accent">Portfolio</span></h1><p className="hero-description">Replace this sentence with PogDog's specialty, the kinds of projects he enjoys, and the value he brings to a team.</p><div className="hero-actions"><a className="button button-solid" href="#work">View selected work <Arrow /></a><a className="button button-quiet" href="#contact">Contact me <span className="button-line" /></a></div><div className="hero-proof"><span>Specializing in</span><div className="proof-items"><span>Add specialty one</span><span>Add specialty two</span><span>Add specialty three</span></div></div></div><div className="hero-media" aria-label="PogDog profile picture"><div className="media-frame"><div className="media-image" /><div className="media-overlay" /><div className="media-scan" /><span className="media-coordinates">POGDOG / PROFILE<br />ROBLOX DEVELOPER</span><span className="media-time">READY <i>/</i> BUILD</span><div className="media-center"><span className="play-ring">P</span><small>PROFILE</small></div><div className="media-caption"><span>PogDog / selected work</span><span>Replace with specialties</span></div></div><div className="hero-float hero-float-top"><span className="float-symbol">+</span><span>Add a short<br /><b>working principle</b></span></div><div className="hero-float hero-float-bottom"><span className="float-number">00+</span><span>Years on Roblox<br /><b>replace this</b></span></div></div><div className="hero-bottom-mark"><span>SCROLL</span><span className="scroll-arrow">↓</span></div></section>
+    <section className="hero-section" id="top"><div className="hero-grid" /><div className="hero-copy"><p className="eyebrow hero-eyebrow"><span className="eyebrow-dot" /> Pogdog · available for production work</p><p className="hero-name">Pogdog</p><h1><span className="hero-outline">Roblox</span><br />Gameplay<br /><span className="hero-accent">Systems Engineer</span></h1><p className="hero-description">I debug live games, understand messy codebases, and ship reliable fixes without rewriting what already works.</p><div className="hero-actions"><a className="button button-solid" href="#work">View selected work <Arrow /></a><a className="button button-quiet" href="#contact">Contact me <span className="button-line" /></a></div><div className="hero-proof"><span>Specializing in</span><div className="proof-items"><span>Production debugging</span><span>Vehicles & A-Chassis</span><span>Client-server systems</span></div></div></div><div className="hero-media" aria-label="Pogdog profile picture"><div className="media-frame"><div className="media-image" /><div className="media-overlay" /><div className="media-scan" /><span className="media-coordinates">Pogdog / PROFILE<br />ROBLOX SYSTEMS</span><span className="media-time">READY <i>/</i> BUILD</span><div className="media-center"><span className="play-ring">P</span><small>PROFILE</small></div><div className="media-caption"><span>Pogdog / selected work</span><span>Debugging · vehicles · UI</span></div></div><div className="hero-float hero-float-top"><span className="float-symbol">+</span><span>Root cause<br /><b>over rewrite</b></span></div><div className="hero-float hero-float-bottom"><span className="float-number">05+</span><span>Years on Roblox<br /><b>with intent</b></span></div></div><div className="hero-bottom-mark"><span>SCROLL</span><span className="scroll-arrow">↓</span></div></section>
 
     <section className="metrics-section" aria-label="Selected metrics"><div className="metrics-intro"><span className="kicker">TRUST / SIGNAL</span><p>Useful context, not a wall of claims.</p></div>{metrics.map((metric) => <div className="metric" key={metric.label}><strong>{metric.value}</strong><span>{metric.label}</span><small>{metric.note}</small></div>)}</section>
 
@@ -230,7 +217,7 @@ export default function Portfolio() {
 
     <section className="statement-section section-pad"><SectionLabel index="01">The operating principle</SectionLabel><div className="statement-wrap"><p className="statement-large">Fix the real problem.<br /><em>Keep what works.</em></p><p className="statement-aside">I enter existing projects, find the root cause, and ship the smallest fix that holds.</p></div></section>
 
-    <section className="work-section section-pad" id="work"><SectionLabel index="02">Selected work</SectionLabel><div className="work-intro"><div><h2>Projects with<br /><span>clear outcomes.</span></h2></div><p>Replace these six examples with PogDog's real projects, screenshots, credits, links, and results.</p></div><div className="filter-row" role="tablist" aria-label="Project categories">{filters.map((filter) => <button key={filter} role="tab" aria-selected={activeFilter === filter} className={activeFilter === filter ? "is-active" : ""} onClick={() => setActiveFilter(filter)}>{filter}</button>)}</div><div className="project-grid">{visibleProjects.map((project) => <ProjectCard key={project.slug} project={project} onOpen={setSelectedProject} />)}</div><div className="production-note"><span className="kicker">FEATURED CASE-STUDY TEMPLATE</span><p>Replace this with the strongest verified project outcome, PogDog's exact contribution, and any collaborators who should be credited.</p><Link href="/work/featured-project">Open the case-study template <Arrow /></Link></div></section>
+    <section className="work-section section-pad" id="work"><SectionLabel index="02">Selected work</SectionLabel><div className="work-intro"><div><h2>Small demos.<br /><span>Real systems.</span></h2></div><p>Previous work, organised by the system each project demonstrates.</p></div><div className="filter-row" role="tablist" aria-label="Project categories">{filters.map((filter) => <button key={filter} role="tab" aria-selected={activeFilter === filter} className={activeFilter === filter ? "is-active" : ""} onClick={() => setActiveFilter(filter)}>{filter}</button>)}</div><div className="project-grid">{visibleProjects.map((project) => <ProjectCard key={project.slug} project={project} onOpen={setSelectedProject} />)}</div><div className="production-note"><span className="kicker">PRODUCTION NOTE / WEST INDIES</span><p>DataStore throttling and data loss fixed with my team in one week. Now saving enormous player data reliably at 500 CCU every day.</p><Link href="/work/featured-project">View the DataStore case <Arrow /></Link></div></section>
 
     <section className="problems-section section-pad" id="approach"><SectionLabel index="03">Problems I solve</SectionLabel><div className="problems-header"><h2>When the system<br /><span>stops making sense.</span></h2><p>Find the failure. Fix the cause. Leave the system clearer.</p></div><div className="problems-list">{bugs.map((bug) => <article className="problem-row" key={bug.id}><span className="problem-id">{bug.id}</span><span className="problem-icon">{bug.icon}</span><div><small>{bug.type}</small><h3>{bug.title}</h3></div><span className="problem-result">{bug.result}</span><span className="problem-arrow">↗</span></article>)}</div></section>
 
@@ -240,12 +227,12 @@ export default function Portfolio() {
 
     <section className="workflow-section section-pad"><SectionLabel index="06">The working rhythm</SectionLabel><div className="workflow-heading"><h2>Targeted fixes.<br /><span>Durable systems.</span></h2><p>Understand first. Change carefully. Test the edge cases. Leave the next developer a clearer path.</p></div><div className="workflow-line">{workflow.map(([title, copy], index) => <div className="workflow-step" key={title}><span className="workflow-dot">0{index + 1}</span><strong>{title}</strong><p>{copy}</p></div>)}</div></section>
 
-    <section className="testimonials-section section-pad"><SectionLabel index="07">Good work leaves a trail</SectionLabel><div className="testimonials-layout"><div><h2>Built to be<br /><span>trusted.</span></h2><p className="section-copy">Clear questions, careful changes, and systems that are easier to continue.</p></div><div className="testimonial-stage"><article className="testimonial-card"><div className="testimonial-quote">“</div><p>{testimonials[testimonialIndex].quote}</p><div className="testimonial-person"><span className="testimonial-avatar">{testimonials[testimonialIndex].initials}</span><div><strong>{testimonials[testimonialIndex].name}</strong><small>{testimonials[testimonialIndex].role} · {testimonials[testimonialIndex].project}</small></div></div></article><div className="testimonial-controls"><span>0{testimonialIndex + 1} / 0{testimonials.length}</span><div><button onClick={() => setTestimonialIndex((current) => (current - 1 + testimonials.length) % testimonials.length)} aria-label="Previous testimonial">←</button><button onClick={() => setTestimonialIndex((current) => (current + 1) % testimonials.length)} aria-label="Next testimonial">→</button></div></div></div></div></section>
+    <section className="testimonials-section section-pad"><SectionLabel index="07">How I work</SectionLabel><div className="testimonials-layout"><div><h2>Clear work.<br /><span>Shared context.</span></h2><p className="section-copy">Clear questions, careful changes, and systems that are easier to continue.</p></div><div className="testimonial-stage"><article className="testimonial-card"><div className="testimonial-quote">“</div><p>{testimonials[testimonialIndex].quote}</p><div className="testimonial-person"><span className="testimonial-avatar">{testimonials[testimonialIndex].initials}</span><div><strong>{testimonials[testimonialIndex].name}</strong><small>{testimonials[testimonialIndex].role} · {testimonials[testimonialIndex].project}</small></div></div></article><div className="testimonial-controls"><span>0{testimonialIndex + 1} / 0{testimonials.length}</span><div><button onClick={() => setTestimonialIndex((current) => (current - 1 + testimonials.length) % testimonials.length)} aria-label="Previous testimonial">←</button><button onClick={() => setTestimonialIndex((current) => (current + 1) % testimonials.length)} aria-label="Next testimonial">→</button></div></div></div></div></section>
 
-    <section className="contact-section section-pad" id="contact"><div className="contact-copy"><SectionLabel index="08">Start a conversation</SectionLabel><h2>Have a Roblox project<br /><span>worth building?</span></h2><p>Replace this with PogDog's preferred contact instructions and response expectations.</p><div className="contact-details"><a href={discordUrl}>Discord: add_username <Arrow /></a><span>ADD TIMEZONE · REMOTE</span><span>ADD AVAILABILITY · ADD RESPONSE TIME</span></div></div><ContactForm /></section>
+    <section className="contact-section section-pad" id="contact"><div className="contact-copy"><SectionLabel index="08">Contact</SectionLabel><h2>Have a Roblox project<br /><span>worth building?</span></h2><p>For project enquiries, share what broke, what you tried, and what a good outcome looks like.</p><div className="contact-details"><span>IST / UTC+05:30 · REMOTE</span><span>Available for select production work · Replies in 1–2 business days</span></div></div><ContactForm /></section>
 
-    <footer className="site-footer"><div className="footer-brand"><span className="brand-mark">P</span><span>POGDOG / ROBLOX DEVELOPER</span></div><p>Replace with three core specialties</p><div><a href="#top">Back to top ↑</a><span>© 2026</span></div></footer>
+    <footer className="site-footer"><div className="footer-brand"><span className="brand-mark">P</span><span>Pogdog / ROBLOX SYSTEMS</span></div><p>Production debugging · gameplay systems · live-game maintenance</p><div><a href="#top">Back to top ↑</a><span>© 2026</span></div></footer>
 
-    {selectedProject && <div className="modal-backdrop" role="presentation" onClick={() => setSelectedProject(null)}><article className="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title" onClick={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setSelectedProject(null)} aria-label="Close case study">×</button><div className="modal-image" style={{ backgroundImage: `linear-gradient(180deg, rgba(8,10,10,.12), rgba(8,10,10,.85)), url(${selectedProject.image})` }}><span>{selectedProject.eyebrow}</span><strong>{selectedProject.title}</strong></div><div className="modal-content"><p className="kicker">{selectedProject.category} / {selectedProject.period}</p><h2 id="project-modal-title">{selectedProject.title}</h2><p>{selectedProject.description}</p><div className="modal-facts"><div><span>Role</span><strong>{selectedProject.role}</strong></div><div><span>Result</span><strong>{selectedProject.result}</strong></div></div><div className="tag-row">{selectedProject.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>{selectedProject.videoUrl && <a className="button button-quiet" href={selectedProject.videoUrl} target="_blank" rel="noreferrer">Watch reel <Arrow /></a>}{selectedProject.slug === "featured-project" && <Link className="button button-solid" href="/work/featured-project">Open case note <Arrow /></Link>}</div></article></div>}
+    {selectedProject && <div className="modal-backdrop" role="presentation" onClick={() => setSelectedProject(null)}><article className="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title" onClick={(event) => event.stopPropagation()}><button className="modal-close" onClick={() => setSelectedProject(null)} aria-label="Close case study">×</button><div className="modal-image" style={{ backgroundImage: `linear-gradient(180deg, rgba(8,10,10,.12), rgba(8,10,10,.85)), url(${selectedProject.image})` }}><span>{selectedProject.eyebrow}</span><strong>{selectedProject.title}</strong></div><div className="modal-content"><p className="kicker">{selectedProject.category}{selectedProject.period ? ` / ${selectedProject.period}` : ""}</p><h2 id="project-modal-title">{selectedProject.title}</h2><p>{selectedProject.description}</p><div className="modal-facts">{selectedProject.role && <div><span>Role</span><strong>{selectedProject.role}</strong></div>}<div><span>Result</span><strong>{selectedProject.result}</strong></div></div><div className="tag-row">{selectedProject.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div>{selectedProject.videoUrl && <a className="button button-quiet" href={selectedProject.videoUrl} target="_blank" rel="noreferrer">Watch reel <Arrow /></a>}{selectedProject.slug === "featured-project" && <Link className="button button-solid" href="/work/featured-project">Open case note <Arrow /></Link>}</div></article></div>}
   </main>;
 }
