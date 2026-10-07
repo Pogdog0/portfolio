@@ -2,8 +2,10 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function AdminLogin() {
+  const router = useRouter();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -13,7 +15,7 @@ export default function AdminLogin() {
     const form = new FormData(event.currentTarget);
     try {
       const response = await fetch("/api/auth/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: form.get("email"), password: form.get("password") }) });
-      if (response.ok) { window.location.assign("/admin"); return; }
+      if (response.ok) { router.replace("/admin"); router.refresh(); return; }
       const result = await response.json().catch(() => ({ error: "Invalid email or password." }));
       setError(result.error ?? "Invalid email or password.");
     } catch {

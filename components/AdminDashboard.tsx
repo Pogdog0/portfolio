@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Enquiry, EnquiryStatus, PortfolioProject, SiteContent } from "@/lib/content";
 
 const navGroups = [
@@ -69,6 +70,7 @@ function ProjectEditor({ project, media, initialTab, onClose, onSave }: { projec
 }
 
 export default function AdminDashboard({ initialContent, initialEnquiries, storageWritable }: { initialContent: SiteContent; initialEnquiries: Enquiry[]; storageWritable: boolean }) {
+  const router = useRouter();
   const [active, setActive] = useState("Dashboard");
   const [content, setContent] = useState(initialContent);
   const [enquiries, setEnquiries] = useState(initialEnquiries);
@@ -106,12 +108,12 @@ export default function AdminDashboard({ initialContent, initialEnquiries, stora
   }
 
   async function persist(next: SiteContent, message = "Changes saved") {
-    if (!storageWritable) { setError("This deployment is read-only. Connect persistent database and object storage to enable admin changes on Vercel."); return false; }
+    if (!storageWritable) { setError("This deployment is read-only. Connect a persistent database to enable admin changes on Vercel."); return false; }
     setSaving(true); setError(""); setContent(next);
     try {
       const response = await fetch("/api/admin/content", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ content: next }) });
       const result = await response.json().catch(() => ({}));
-      if (response.status === 401) { window.location.assign("/admin/login"); return false; }
+      if (response.status === 401) { router.replace("/admin/login"); router.refresh(); return false; }
       if (!response.ok) throw new Error(result.error || "Unable to save changes.");
       setContent(result.content); lastSaved.current = result.content; flash(message); return true;
     } catch (reason) {
@@ -166,7 +168,7 @@ export default function AdminDashboard({ initialContent, initialEnquiries, stora
 
   async function uploadMedia(file?: File) {
     if (!file) return;
-    if (!storageWritable) { setError("This deployment is read-only. Media uploads require persistent object storage."); return; }
+    if (!storageWritable) { setError("This deployment is read-only. Media uploads require a persistent database."); return; }
     setUploading(true); setError("");
     const form = new FormData(); form.set("file", file);
     try {
@@ -184,7 +186,7 @@ export default function AdminDashboard({ initialContent, initialEnquiries, stora
 
   async function logout() {
     const response = await fetch("/api/auth/logout", { method: "POST" });
-    if (response.ok) window.location.assign("/admin/login"); else setError("Unable to sign out. Please try again.");
+    if (response.ok) { router.replace("/admin/login"); router.refresh(); } else setError("Unable to sign out. Please try again.");
   }
 
   const updateList = <K extends "metrics" | "services" | "skills" | "workflow">(key: K, index: number, field: string, value: string) => setContent((current) => ({ ...current, [key]: current[key].map((item, itemIndex) => itemIndex === index ? { ...item, [field]: value } : item) }));
@@ -198,7 +200,7 @@ export default function AdminDashboard({ initialContent, initialEnquiries, stora
     </aside>
     <main className="admin-main">
       <header className="admin-header"><div><span className="admin-breadcrumb">CONTENT OS / {active.toUpperCase()}</span><h1>{active}</h1></div><div className="admin-header-actions"><a href="/" target="_blank" rel="noreferrer" className="admin-preview">View live site ↗</a><button className="admin-add" disabled={!storageWritable} title={!storageWritable ? "Persistent storage is required" : undefined} onClick={() => editProject(emptyProject(content.projects.length))}>+ New project</button></div></header>
-      {!storageWritable && <div className="admin-storage-notice" role="status"><strong>Read-only deployment</strong><span>The public site is online, but Vercel needs an external database and object storage before admin changes can be saved.</span></div>}
+      {!storageWritable && <div className="admin-storage-notice" role="status"><strong>Read-only deployment</strong><span>The public site is online, but Vercel needs a working PostgreSQL connection before admin changes can be saved.</span></div>}
       {error && <div className="admin-error" role="alert"><span>{error}</span><button onClick={() => setError("")} aria-label="Dismiss error">×</button></div>}
       <div className="admin-content">
         {active === "Dashboard" && <>

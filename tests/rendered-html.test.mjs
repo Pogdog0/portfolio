@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { createServer } from "node:net";
 import { pbkdf2Sync } from "node:crypto";
 import { once } from "node:events";
-import { mkdtempSync, rmSync, unlinkSync } from "node:fs";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -172,8 +172,11 @@ test("admin authentication, content publishing, enquiries, and media work end to
   const upload = await fetch(new URL("/api/admin/media", baseUrl), { method: "POST", headers: { cookie }, body: form });
   assert.equal(upload.status, 200);
   const uploaded = await upload.json();
-  assert.match(uploaded.url, /^\/uploads\/.+\.png$/);
-  unlinkSync(join(projectRoot, "public", uploaded.url));
+  assert.match(uploaded.url, /^\/api\/media\/[0-9a-f-]{36}$/i);
+  const uploadedImage = await fetch(new URL(uploaded.url, baseUrl));
+  assert.equal(uploadedImage.status, 200);
+  assert.equal(uploadedImage.headers.get("content-type"), "image/png");
+  assert.deepEqual(Buffer.from(await uploadedImage.arrayBuffer()), png);
 
   const remove = await fetch(new URL(`/api/admin/enquiries/${enquiry.id}`, baseUrl), { method: "DELETE", headers: { cookie } });
   assert.equal(remove.status, 200);

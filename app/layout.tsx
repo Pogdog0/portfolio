@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { getSiteContent } from "@/lib/content-store";
 import "./globals.css";
 
-export function generateMetadata(): Metadata {
-  const { settings } = getSiteContent();
+export async function generateMetadata(): Promise<Metadata> {
+  const { settings } = await getSiteContent();
   return {
     title: settings.seoTitle,
     description: settings.seoDescription,

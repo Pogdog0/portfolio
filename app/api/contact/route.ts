@@ -69,7 +69,7 @@ export async function POST(request: Request) {
 
   let enquiry;
   try {
-    enquiry = createEnquiry({ name, email, discord, projectType, description });
+    enquiry = await createEnquiry({ name, email, discord, projectType, description });
   } catch (error) {
     console.error("Unable to store contact enquiry", error);
     return NextResponse.json({ error: "Your message could not be saved. Please email poggerscape3@gmail.com directly." }, { status: 503 });
@@ -112,14 +112,14 @@ export async function POST(request: Request) {
 
     if (!response.ok) {
       console.error("Contact email provider returned an error", response.status);
-      setEnquiryDeliveryStatus(enquiry.id, "failed");
+      await setEnquiryDeliveryStatus(enquiry.id, "failed");
       return NextResponse.json({ ok: true, delivery: "stored" }, { status: 201 });
     }
 
-    setEnquiryDeliveryStatus(enquiry.id, "sent");
+    await setEnquiryDeliveryStatus(enquiry.id, "sent");
     return NextResponse.json({ ok: true, delivery: "sent" }, { status: 201 });
   } catch {
-    setEnquiryDeliveryStatus(enquiry.id, "failed");
+    await setEnquiryDeliveryStatus(enquiry.id, "failed");
     return NextResponse.json({ ok: true, delivery: "stored" }, { status: 201 });
   }
 }

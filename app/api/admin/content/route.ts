@@ -114,7 +114,8 @@ function normalizeContent(value: unknown): SiteContent {
 
 export async function GET() {
   if (!await isAdminAuthenticated()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  return NextResponse.json({ content: getSiteContent(), enquiries: listEnquiries() }, { headers: { "Cache-Control": "no-store" } });
+  const [content, enquiries] = await Promise.all([getSiteContent(), listEnquiries()]);
+  return NextResponse.json({ content, enquiries }, { headers: { "Cache-Control": "no-store" } });
 }
 
 export async function PUT(request: Request) {
@@ -124,7 +125,7 @@ export async function PUT(request: Request) {
   try {
     const body = await request.json() as { content?: unknown };
     const content = normalizeContent(body.content);
-    const updatedAt = saveSiteContent(content);
+    const updatedAt = await saveSiteContent(content);
     return NextResponse.json({ content, updatedAt });
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : "Unable to save content." }, { status: 400 });

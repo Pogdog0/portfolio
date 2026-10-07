@@ -47,9 +47,9 @@ Use `/admin` for projects, case studies, images, metrics, services, skills, work
 
 The current project names, metrics, and sample case study content are placeholders. Replace them with accurate, approved work before making the site public. Do not publish private client work, invented results, or testimonials without approval.
 
-The admin dashboard is connected to the public portfolio. It supports project and case-study CRUD, draft/published visibility, featured-project selection, ordering, editable metrics/services/skills/principles/settings, image uploads, and an enquiry inbox. Content and enquiries are persisted in the SQLite file configured by `DATABASE_URL`.
+The admin dashboard is connected to the public portfolio. It supports project and case-study CRUD, draft/published visibility, featured-project selection, ordering, editable metrics/services/skills/principles/settings, image uploads, and an enquiry inbox. Content, enquiries, and uploaded media are persisted by the database configured with `DATABASE_URL`.
 
-Uploaded media is stored in `public/uploads` and indexed in the content database. Both the SQLite file and uploaded-media directory are ignored by Git; back them up with the rest of the site data.
+Local development can use a `file:` SQLite URL. Hosted deployments use a pooled `postgresql://` connection string. Database tables and initial portfolio content are created automatically on first connection.
 
 ## Configure contact delivery
 
@@ -62,12 +62,12 @@ The form always stores a valid submission in the admin inbox. When Resend is con
 
 ## Deploy
 
-1. Deploy to a Node.js host with a persistent writable volume for the SQLite database and `public/uploads`.
+1. Create a hosted PostgreSQL database and copy its pooled connection string.
 2. Add `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `AUTH_SECRET`, `DATABASE_URL`, and `NEXT_PUBLIC_SITE_URL` as production environment variables. Use a unique production password and a new secret.
 3. Add `RESEND_API_KEY` and `CONTACT_TO_EMAIL`; add `CONTACT_FROM_EMAIL` after verifying a sender domain.
-4. Back up the database and uploads volume, then check `/`, a published `/work/[slug]` page, `/admin/login`, and `/admin`.
+4. Deploy, then check `/`, a published `/work/[slug]` page, `/admin/login`, and `/admin`.
 
-Vercel can run the public site, but its serverless filesystem is not durable. On Vercel the site safely serves the bundled content and marks the dashboard read-only instead of attempting SQLite writes. Use an external database and object-storage adapter before enabling dashboard edits there.
+On Vercel, set `DATABASE_URL` to PostgreSQL for durable dashboard edits, enquiries, and uploaded images. A `file:` SQLite URL remains intentionally read-only in serverless environments.
 
 ## Checks
 

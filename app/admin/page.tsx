@@ -11,5 +11,10 @@ export default async function AdminPage() {
   const cookieStore = await cookies();
   const isAuthenticated = await verifySessionToken(cookieStore.get(ADMIN_SESSION_COOKIE)?.value);
   if (!isAuthenticated) redirect("/admin/login");
-  return <AdminDashboard initialContent={getSiteContent()} initialEnquiries={listEnquiries()} storageWritable={isContentStoreWritable()} />;
+  const [initialContent, initialEnquiries, storageWritable] = await Promise.all([
+    getSiteContent(),
+    listEnquiries(),
+    isContentStoreWritable(),
+  ]);
+  return <AdminDashboard initialContent={initialContent} initialEnquiries={initialEnquiries} storageWritable={storageWritable} />;
 }
