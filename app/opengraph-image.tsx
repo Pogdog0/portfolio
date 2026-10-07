@@ -8,7 +8,7 @@ export const alt = "Pogdog - Roblox gameplay systems engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-const heroData = await readFile(join(process.cwd(), "public", "images", "projects", "west-indies.webp"));
+const heroData = await readFile(join(process.cwd(), "public", "images", "social", "pogdog-studio-v1.png"));
 const heroPng = await sharp(heroData).resize(size.width, size.height, { fit: "cover" }).png().toBuffer();
 const heroSrc = `data:image/png;base64,${heroPng.toString("base64")}`;
 
