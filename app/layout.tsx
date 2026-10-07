@@ -9,8 +9,17 @@ export async function generateMetadata(): Promise<Metadata> {
     description: settings.seoDescription,
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
     alternates: { canonical: "/" },
-    openGraph: { title: settings.seoTitle, description: settings.seoDescription, type: "website", url: "/" },
-    twitter: { card: "summary", title: settings.seoTitle, description: settings.seoDescription },
+    applicationName: "Pogdog Portfolio",
+    category: "technology",
+    openGraph: {
+      title: settings.seoTitle,
+      description: settings.seoDescription,
+      siteName: "Pogdog Portfolio",
+      locale: "en_US",
+      type: "website",
+      url: "/",
+    },
+    twitter: { card: "summary_large_image", title: settings.seoTitle, description: settings.seoDescription },
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
   };
 }

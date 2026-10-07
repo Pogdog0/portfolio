@@ -1,8 +1,32 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { getSiteContent } from "@/lib/content-store";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const project = (await getSiteContent()).projects.find((item) => item.slug === slug && item.status === "Published" && item.caseStudy.intro);
+  if (!project) return { title: "Case study not found - Pogdog" };
+  const title = `${project.title} - Roblox case study | Pogdog`;
+  const description = project.caseStudy.intro || project.description;
+  const url = `/work/${project.slug}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      siteName: "Pogdog Portfolio",
+      locale: "en_US",
+      type: "article",
+      url,
+    },
+    twitter: { card: "summary_large_image", title, description },
+  };
+}
 
 export default async function CaseStudy({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

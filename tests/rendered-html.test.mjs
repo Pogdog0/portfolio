@@ -91,6 +91,14 @@ test("server-renders the portfolio homepage", async () => {
   const html = await response.text();
   assert.match(html, /Pogdog/i);
   assert.match(html, /Roblox/i);
+  assert.match(html, /<meta name="twitter:card" content="summary_large_image"/);
+  const socialImage = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+  assert.ok(socialImage);
+  const imageMetadataUrl = new URL(socialImage.replaceAll("&amp;", "&"));
+  const imageResponse = await fetch(new URL(`${imageMetadataUrl.pathname}${imageMetadataUrl.search}`, baseUrl));
+  assert.equal(imageResponse.status, 200);
+  assert.equal(imageResponse.headers.get("content-type"), "image/png");
+  assert.deepEqual(Buffer.from(await imageResponse.arrayBuffer()).subarray(0, 8), Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
 });
 
 test("server-renders protected-area surfaces and the case study route", async () => {
@@ -104,7 +112,16 @@ test("server-renders protected-area surfaces and the case study route", async ()
   assert.equal(login.status, 200);
   assert.equal(caseStudy.status, 200);
   assert.match(await login.text(), /Welcome back/i);
-  assert.match(await caseStudy.text(), /What was happening|Featured Project/i);
+  const caseStudyHtml = await caseStudy.text();
+  assert.match(caseStudyHtml, /What was happening|Featured Project/i);
+  assert.match(caseStudyHtml, /<meta property="og:title" content="West Indies - Roblox case study \| Pogdog"/);
+  assert.match(caseStudyHtml, /<meta property="og:image" content="[^"]+\/work\/featured-project\/opengraph-image/);
+  const projectSocialImage = caseStudyHtml.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+  assert.ok(projectSocialImage);
+  const projectImageMetadataUrl = new URL(projectSocialImage.replaceAll("&amp;", "&"));
+  const projectImageResponse = await fetch(new URL(`${projectImageMetadataUrl.pathname}${projectImageMetadataUrl.search}`, baseUrl));
+  assert.equal(projectImageResponse.status, 200);
+  assert.equal(projectImageResponse.headers.get("content-type"), "image/png");
 });
 
 test("admin authentication, content publishing, enquiries, and media work end to end", async () => {
